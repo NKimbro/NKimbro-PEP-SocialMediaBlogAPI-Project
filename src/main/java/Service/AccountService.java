@@ -18,13 +18,9 @@ public class AccountService {
     public List<Account> getAllAccounts() {
         return accountDAO.getAllAccounts();
     }
-
-    public Account getAccountByUsername(Account account) {
-      return accountDAO.getAccountByUsername(account.getUsername());
-    }
     
     public Account addAccount(Account account) {
-      if (account.getUsername().equals("") || account.getPassword().length() < 4)
+      if (account.getUsername().equals("") || account.getPassword().length() < 4 || accountDAO.getAccountByUsername(account.getUsername()) != null)
         return null;
       return accountDAO.insertAccount(account);
     }

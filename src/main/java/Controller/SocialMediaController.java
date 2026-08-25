@@ -27,10 +27,6 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.post("/register", this::postAccountHandler);
-        app.post("/books", this::postBookHandler);
-        app.get("/authors", this::getAllAuthorsHandler);
-        app.post("/authors", this::postAuthorHandler);
-        app.get("/books/available", this::getAvailableBooksHandler);
         return app;
     }
 
