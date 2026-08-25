@@ -89,7 +89,7 @@ public class SocialMediaController {
     private void updateMessageByIDHandler(Context ctx) {
         String message = "";
         if (ctx.body().length() > 18)
-            message = ctx.body().substring(17, ctx.body().length()-1);
+            message = ctx.body().substring(16, ctx.body().length()-2);
         Message result = messageService.updateMessageByID(Integer.parseInt(ctx.pathParam("id")), message);
         if(result != null){
             ctx.json(result);
