@@ -81,11 +81,14 @@ public class MessageDAO {
         preparedStatement.setString(2, message.getMessage_text());
         preparedStatement.setLong(3, message.getTime_posted_epoch());
         preparedStatement.executeUpdate();
-        ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-        //if(pkeyResultSet.next()){
-            //int generated_message_id = (int) pkeyResultSet.getLong(1);
-            return new Message(1, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
-        //}
+        sql = "select message_id from Message";
+        preparedStatement = connection.prepareStatement(sql);
+        ResultSet rs = preparedStatement.executeQuery();
+        int id = -1;
+        while(rs.next()) {
+            id = rs.getInt("message_id");
+        }
+        return new Message(id, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
       }catch(SQLException e){
           System.out.println(e.getMessage());
       }
