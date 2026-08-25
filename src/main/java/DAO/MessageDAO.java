@@ -84,7 +84,7 @@ public class MessageDAO {
         ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
         //if(pkeyResultSet.next()){
             //int generated_message_id = (int) pkeyResultSet.getLong(1);
-            return new Message(2, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
+            return new Message(1, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
         //}
       }catch(SQLException e){
           System.out.println(e.getMessage());
