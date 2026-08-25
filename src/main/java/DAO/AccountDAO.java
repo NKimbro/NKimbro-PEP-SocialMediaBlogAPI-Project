@@ -55,7 +55,7 @@ public Account getAccountByID(int id){
             Account account = new Account(rs.getInt("account_id"),
                     rs.getString("username"),
                     rs.getString("password"));
-            return new Account();
+            return account;
         }
     }catch(SQLException e){
         System.out.println(e.getMessage());
