@@ -52,7 +52,7 @@ public class SocialMediaController {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
         Account foundAccount = accountService.getAccountByUsername(account.getUsername());
-        if(foundAccount.getPassword().equals(account.getPassword())){
+        if(foundAccount != null && foundAccount.getPassword().equals(account.getPassword())){
             ctx.json(mapper.writeValueAsString(foundAccount));
         }else{
             ctx.status(401);
@@ -74,48 +74,29 @@ public class SocialMediaController {
         ctx.json(messageService.getAllMessages());
     }
 
-    private void getMessageByIDHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addedAccount = accountService.addAccount(account);
-        if(addedAccount!=null){
-            ctx.json(mapper.writeValueAsString(addedAccount));
-        }else{
-            ctx.status(400);
-        }
+    private void getMessageByIDHandler(Context ctx) {
+        ctx.json(messageService.getMessageByID(Integer.parseInt(ctx.pathParam("id"))));
     }
 
-    private void deleteMessageByIDHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addedAccount = accountService.addAccount(account);
-        if(addedAccount!=null){
-            ctx.json(mapper.writeValueAsString(addedAccount));
-        }else{
-            ctx.status(400);
-        }
+    private void deleteMessageByIDHandler(Context ctx) {
+        int result = messageService.deleteMessageByID(Integer.parseInt(ctx.pathParam("id")));
+        if (result > 0)
+            ctx.json(result);
     }
 
     private void updateMessageByIDHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addedAccount = accountService.addAccount(account);
-        if(addedAccount!=null){
-            ctx.json(mapper.writeValueAsString(addedAccount));
+        String message = mapper.readValue(ctx.body(), String.class);
+        int result = messageService.updateMessageByID(Integer.parseInt(ctx.pathParam("id")), message);
+        if(result > 0){
+            ctx.json(result);
         }else{
             ctx.status(400);
         }
     }
 
-    private void getMessagesByAccountIDHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addedAccount = accountService.addAccount(account);
-        if(addedAccount!=null){
-            ctx.json(mapper.writeValueAsString(addedAccount));
-        }else{
-            ctx.status(400);
-        }
+    private void getMessagesByAccountIDHandler(Context ctx) {
+        ctx.json(messageService.getMessagesByAccountID(Integer.parseInt(ctx.pathParam("id"))));
     }
 
 }
