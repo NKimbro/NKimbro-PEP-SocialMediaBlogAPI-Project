@@ -20,9 +20,9 @@ public class MessageDAO {
         ResultSet rs = preparedStatement.executeQuery();
         while(rs.next()){
             Message message = new Message(rs.getInt("message_id"),
-                    rs.getInt("author_id"),
-                    rs.getString("title"),
-                    rs.getInt("copies_available"));
+                rs.getInt("posted_by"),
+                rs.getString("message_text"),
+                rs.getLong("time_posted_epoch"));
             messages.add(message);
         }
     }catch(SQLException e){
@@ -31,21 +31,39 @@ public class MessageDAO {
     return messages;
   }
 
-  public Message getMessageByIsbn(int isbn){
+  public List<Message> getMessagesByAccountID(int id){
+    Connection connection = ConnectionUtil.getConnection();
+    List<Message> messages = new ArrayList<>();
+    try {
+        String sql = "select * from Message where posted_by = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet rs = preparedStatement.executeQuery();
+        while(rs.next()){
+            Message message = new Message(rs.getInt("message_id"),
+                rs.getInt("posted_by"),
+                rs.getString("message_text"),
+                rs.getLong("time_posted_epoch"));
+            messages.add(message);
+        }
+    }catch(SQLException e){
+        System.out.println(e.getMessage());
+    }
+    return messages;
+  }
+
+  public Message getMessageByID(int id){
       Connection connection = ConnectionUtil.getConnection();
       try {
-          //Write SQL logic here
-          String sql = "select * from Message where isbn = ?";
+          String sql = "select * from Message where message_id = ?";
           PreparedStatement preparedStatement = connection.prepareStatement(sql);
-          preparedStatement.setInt(1, isbn);
-          //write preparedStatement's setInt method here.
-
+          preparedStatement.setInt(1, id);
           ResultSet rs = preparedStatement.executeQuery();
           while(rs.next()){
-              Message message = new Message(rs.getInt("isbn"),
-                      rs.getInt("author_id"),
-                      rs.getString("title"),
-                      rs.getInt("copies_available"));
+              Message message = new Message(rs.getInt("message_id"),
+                  rs.getInt("posted_by"),
+                  rs.getString("message_text"),
+                  rs.getLong("time_posted_epoch"));
               return message;
           }
       }catch(SQLException e){
@@ -57,40 +75,48 @@ public class MessageDAO {
   public Message insertMessage(Message message){
       Connection connection = ConnectionUtil.getConnection();
       try {
-          String sql = "insert into Message (isbn, author_id, title, copies_available) values (?, ?, ?, ?)" ;
+          String sql = "insert into Message (posted_by, message_text, time_posted_epoch) values (?, ?, ?)" ;
           PreparedStatement preparedStatement = connection.prepareStatement(sql);
-          preparedStatement.setInt(1, message.getIsbn());
-          preparedStatement.setInt(2, message.getAuthor_id());
-          preparedStatement.setString(3, message.getTitle());
-          preparedStatement.setInt(4, message.getCopies_available());
+          preparedStatement.setInt(1, message.getPosted_by());
+          preparedStatement.setString(2, message.getMessage_text());
+          preparedStatement.setLong(3, message.getTime_posted_epoch());
           preparedStatement.executeUpdate();
-          return message;
+          ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
+            if(pkeyResultSet.next()){
+                int generated_message_id = (int) pkeyResultSet.getLong(1);
+                return new Message(generated_message_id, message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
+            }
       }catch(SQLException e){
           System.out.println(e.getMessage());
       }
       return null;
   }
 
-  public List<Message> getMessagesWithMessageCountOverZero(){
-      Connection connection = ConnectionUtil.getConnection();
-      List<Message> messages = new ArrayList<>();
-      try {
-          //Write SQL logic here
-          String sql = "select * from Message where copies_available > 0";
-          PreparedStatement preparedStatement = connection.prepareStatement(sql);
+  public int deleteMessageByID(int id){
+    Connection connection = ConnectionUtil.getConnection();
+    try {
+        String sql = "delete from Message where message_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        return preparedStatement.executeUpdate();
+    }catch(SQLException e){
+        System.out.println(e.getMessage());
+    }
+    return -1;
+  }
 
-          ResultSet rs = preparedStatement.executeQuery();
-          while(rs.next()){
-              Message message = new Message(rs.getInt("isbn"),
-                      rs.getInt("author_id"),
-                      rs.getString("title"),
-                      rs.getInt("copies_available"));
-              messages.add(message);
-          }
-      }catch(SQLException e){
-          System.out.println(e.getMessage());
-      }
-      return messages;
+  public int updateMessageByID(Message message){
+    Connection connection = ConnectionUtil.getConnection();
+    try {
+        String sql = "update Message set message_text = ? where message_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, message.getMessage_text());
+        preparedStatement.setInt(2, message.getMessage_id());
+        return preparedStatement.executeUpdate();
+    }catch(SQLException e){
+        System.out.println(e.getMessage());
+    }
+    return -1;
   }
 
 }

@@ -18,6 +18,14 @@ public class AccountService {
     public List<Account> getAllAccounts() {
         return accountDAO.getAllAccounts();
     }
+
+    public Account getAccountByID(int id) {
+      return accountDAO.getAccountByID(id);
+    }
+
+    public Account getAccountByUsername(String username) {
+      return accountDAO.getAccountByUsername(username);
+    }
     
     public Account addAccount(Account account) {
       if (account.getUsername().equals("") || account.getPassword().length() < 4 || accountDAO.getAccountByUsername(account.getUsername()) != null)
