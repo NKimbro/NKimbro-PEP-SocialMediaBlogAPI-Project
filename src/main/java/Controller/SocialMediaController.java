@@ -86,9 +86,8 @@ public class SocialMediaController {
             ctx.json(result);
     }
 
-    private void updateMessageByIDHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        String message = mapper.readValue(ctx.body(), String.class);
+    private void updateMessageByIDHandler(Context ctx) {
+        String message = ctx.body().substring(17, ctx.body().length()-1);
         int result = messageService.updateMessageByID(Integer.parseInt(ctx.pathParam("id")), message);
         if(result > 0){
             ctx.json(result);
