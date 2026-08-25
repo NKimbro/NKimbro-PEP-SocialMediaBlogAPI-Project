@@ -65,7 +65,6 @@ public class SocialMediaController {
         Message addedMessage = messageService.addMessage(message);
         if(addedMessage != null){
             ctx.json(mapper.writeValueAsString(addedMessage));
-            ctx.status(200);
         }else{
             ctx.status(400);
         }
@@ -76,7 +75,9 @@ public class SocialMediaController {
     }
 
     private void getMessageByIDHandler(Context ctx) {
-        ctx.json(messageService.getMessageByID(Integer.parseInt(ctx.pathParam("id"))));
+        Message message = messageService.getMessageByID(Integer.parseInt(ctx.pathParam("id")));
+        if (message != null)
+           ctx.json(message);
     }
 
     private void deleteMessageByIDHandler(Context ctx) {
