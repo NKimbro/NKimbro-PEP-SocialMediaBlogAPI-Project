@@ -18,7 +18,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class SocialMediaController {
     AccountService accountService;
     MessageService messageService;
-    
+
+    public SocialMediaController(){
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+    }
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
