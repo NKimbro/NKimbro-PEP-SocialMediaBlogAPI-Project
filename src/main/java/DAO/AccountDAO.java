@@ -55,12 +55,12 @@ public Account getAccountByID(int id){
             Account account = new Account(rs.getInt("account_id"),
                     rs.getString("username"),
                     rs.getString("password"));
-            return account;
+            return new Account();
         }
     }catch(SQLException e){
         System.out.println(e.getMessage());
     }
-    return new Account();
+    return null;
   }
 
 public Account insertAccount(Account account){
