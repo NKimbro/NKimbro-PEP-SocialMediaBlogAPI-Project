@@ -81,17 +81,17 @@ public class SocialMediaController {
     }
 
     private void deleteMessageByIDHandler(Context ctx) {
-        int result = messageService.deleteMessageByID(Integer.parseInt(ctx.pathParam("id")));
-        if (result > 0)
-            ctx.json(result);
+        Message message = messageService.deleteMessageByID(Integer.parseInt(ctx.pathParam("id")));
+        if (message != null)
+            ctx.json(message);
     }
 
     private void updateMessageByIDHandler(Context ctx) {
         String message = "";
         if (ctx.body().length() > 18)
             message = ctx.body().substring(17, ctx.body().length()-1);
-        int result = messageService.updateMessageByID(Integer.parseInt(ctx.pathParam("id")), message);
-        if(result > 0){
+        Message result = messageService.updateMessageByID(Integer.parseInt(ctx.pathParam("id")), message);
+        if(result != null){
             ctx.json(result);
         }else{
             ctx.status(400);

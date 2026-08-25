@@ -32,14 +32,16 @@ public class MessageService {
     return messageDAO.getMessageByID(id);
   }
 
-  public int deleteMessageByID(int id) {
-    return messageDAO.deleteMessageByID(id);
+  public Message deleteMessageByID(int id) {
+    Message message = messageDAO.getMessageByID(id);
+    messageDAO.deleteMessageByID(id);
+    return message;
   }
 
-  public int updateMessageByID(int id, String newMessageText) {
+  public Message updateMessageByID(int id, String newMessageText) {
     Message message = messageDAO.getMessageByID(id);
     if (message == null || newMessageText.length() < 1 || newMessageText.length() > 254)
-      return 0;
+      return null;
     message.setMessage_text(newMessageText);
     return messageDAO.updateMessageByID(message);
   }
